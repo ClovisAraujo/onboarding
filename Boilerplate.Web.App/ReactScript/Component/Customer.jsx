@@ -45,6 +45,7 @@ export default class Customer extends React.Component {
     }
 
     editCustomer = (id) => {
+        console.log(this.state.id + " " + this.state.name + " " + this.state.address)
         fetch("/Customer/EditCustomer/" + id, {
             method: 'PUT',
             headers: {
@@ -57,7 +58,7 @@ export default class Customer extends React.Component {
             })
         }).then((res) => {
             if (res.ok) {
-                this.setState({ createModalOpen: false, name: '', address: '' });
+                this.setState({ editModalOpen: false, name: '', address: '' });
                 this.loadData();
                 console.log(res);
             } else {

@@ -57,7 +57,7 @@ export default class Product extends React.Component {
             })
         }).then((res) => {
             if (res.ok) {
-                this.setState({ createModalOpen: false, name: '', price: '' });
+                this.setState({ editModalOpen: false, name: '', price: '' });
                 this.loadData();
                 console.log(res);
             } else {

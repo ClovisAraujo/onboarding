@@ -57,7 +57,7 @@ export default class Store extends React.Component {
             })
         }).then((res) => {
             if (res.ok) {
-                this.setState({ createModalOpen: false, name: '', address: '' });
+                this.setState({ editModalOpen: false, name: '', address: '' });
                 this.loadData();
                 console.log(res);
             } else {
