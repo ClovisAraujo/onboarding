@@ -1,7 +1,6 @@
 ﻿#body-cover {
     min-height: 50vh;
     height: auto !important;
-    height: 150px;
     padding-top: 0em;
 }
 
@@ -191,4 +190,18 @@ h1, h2, h3, h4, h5, h6 {
 
 .bodyContainer {
     margin: 10px;
+}
+
+.homeDiv {
+    margin-top: 30px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.homeButtons {
+    margin-top: 30px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }

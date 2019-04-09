@@ -1,38 +1,39 @@
 ﻿import React from 'react';
+import { Header, Icon, Button } from 'semantic-ui-react'
+import { NavLink } from 'react-router-dom';
 
 const Home = () => (
     <div className='container-fluid' id="body-cover">
-        <div className="row">
-            <div className="col-md-1 hidden-xs">
-            </div>
-            <div className="col-md-3 col-xs-4">
-                <div className="col">
-                    <div className="card border-primary mb-4">
-                        <img className="card-img-top" alt="Card image cap" src="https://semantic-ui.com/images/avatar/large/joe.jpg" />
-                        <div className="card-body">
-                            <h4 className="card-title"><a>Mirani</a></h4>
-                            <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" className="btn btn-primary">Button</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="col-md-7 col-xs-8">
-                <div className="jumbotron col">
-                    <h1>This is body </h1>
-                </div>
-                <div className="jumbotron col">
-                    This is body
-                         </div>
-                <div className="jumbotron col">
-                    This is body
-                         </div>
-            </div>
-            <div className="col-md-1 hidden-xs">
-
-            </div>
+        <div className="homeDiv">
+            <Header as='h2' icon>
+                <Icon name='computer' />
+                MVP Studio Internship
+                    <Header.Subheader>Talent Developers - Onboarding Task </Header.Subheader>
+            </Header>
         </div>
+        <div className="homeButtons">
+            <NavLink to="/customer">
+                <Button inverted size='large' color='yellow'>
+                    Customer
+                </Button>
+            </NavLink>&emsp;
+             <NavLink to="/product">
+                <Button inverted size='large' color='green'>
+                    Product
+            </Button>
+            </NavLink>&emsp;
+             <NavLink to="/store">
+                <Button inverted size='large' color='violet'>
+                    Store
+         </Button>
+            </NavLink>&emsp;
+             <NavLink to="/sales">
+                <Button inverted size='large' color='red'>
+                    Sales
+         </Button>
+            </NavLink>
         </div>
+    </div>
 
 )
 
