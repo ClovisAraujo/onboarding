@@ -34,9 +34,13 @@ export default class Customer extends React.Component {
             })
         })
             .then(res => {
-                this.setState({ createModalOpen: false, name: '', address: '' });
-                this.loadData();
-                console.log(res);
+                if (res.ok) {
+                    this.setState({ createModalOpen: false, name: '', address: '' });
+                    this.loadData();
+                    console.log(res);
+                } else {
+                    alert("ALERT!!!\n\nPlease check fields and try again\n\n\n\nName field: Max number of characters is 50\n\Address field: Max number of characters is 250 ")
+                }
             }).catch(err => err);
     }
 
@@ -52,9 +56,13 @@ export default class Customer extends React.Component {
                 Address: this.state.address
             })
         }).then((res) => {
-            this.setState({ editModalOpen: false, name: '', address: ''});
-            this.loadData();
-            console.log(res);
+            if (res.ok) {
+                this.setState({ createModalOpen: false, name: '', address: '' });
+                this.loadData();
+                console.log(res);
+            } else {
+                alert("ALERT!!!\n\nPlease check fields and try again\n\n\n\nName field: Max number of characters is 50\n\Address field: Max number of characters is 250 ")
+            }
         }).catch(err => err);
     }
 
@@ -102,7 +110,7 @@ export default class Customer extends React.Component {
                     <td>{service.address}</td>
                     <td>
                         {/*Edit Modal*/}
-                        <Modal open={this.state.editModalOpen} size={'tiny'} trigger={<Button icon color='yellow' labelPosition='left' onClick={() => this.setState({ editModalOpen: true, name:service.name, address:service.address })}><Icon name='edit' />EDIT</Button>}>
+                        <Modal open={this.state.editModalOpen} size={'tiny'} trigger={<Button icon color='yellow' labelPosition='left' onClick={() => this.setState({ editModalOpen: true, name: service.name, address: service.address })}><Icon name='edit' />EDIT</Button>}>
                             <Modal.Header>Edit customer</Modal.Header>
                             <Modal.Content>
                                 <Form>
@@ -117,7 +125,7 @@ export default class Customer extends React.Component {
                                 </Form>
                             </Modal.Content>
                             <ModalActions>
-                                <Button secondary onClick={() => this.setState({ editModalOpen: false, name: '', address: ''  })}>Cancel</Button>
+                                <Button secondary onClick={() => this.setState({ editModalOpen: false, name: '', address: '' })}>Cancel</Button>
                                 <Button onClick={() => { this.editCustomer(service.id) }} icon positive type='submit' labelPosition='right'><Icon name='check' />Edit</Button>
                             </ModalActions>
                         </Modal>

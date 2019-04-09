@@ -22,8 +22,6 @@ namespace Boilerplate.Web.App.Models
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Product Price is required")]
-        [RegularExpression(@"^\d+\.\d{0,2}$")]
-        [Range(0, 9999999999999999.99)]
         public decimal Price { get; set; }
 
         public ICollection<Sales> ProductSold { get; set; }

@@ -34,9 +34,13 @@ export default class Store extends React.Component {
             })
         })
             .then(res => {
-                this.setState({ createModalOpen: false, name: '', address: '' });
-                this.loadData();
-                console.log(res);
+                if (res.ok) {
+                    this.setState({ createModalOpen: false, name: '', address: '' });
+                    this.loadData();
+                    console.log(res);
+                } else {
+                    alert("ALERT!!!\n\nPlease check fields and try again\n\n\n\nName field: Max number of characters is 50\n\Address field: Max number of characters is 250 ")
+                }
             }).catch(err => err);
     }
 
@@ -52,9 +56,13 @@ export default class Store extends React.Component {
                 Address: this.state.address
             })
         }).then((res) => {
-            this.setState({ editModalOpen: false, name: '', address: '' });
-            this.loadData();
-            console.log(res);
+            if (res.ok) {
+                this.setState({ createModalOpen: false, name: '', address: '' });
+                this.loadData();
+                console.log(res);
+            } else {
+                alert("ALERT!!!\n\nPlease check fields and try again\n\n\n\nName field: Max number of characters is 50\n\Address field: Max number of characters is 250 ")
+            }
         }).catch(err => err);
     }
 

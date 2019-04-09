@@ -34,9 +34,13 @@ export default class Product extends React.Component {
             })
         })
             .then(res => {
-                this.setState({ createModalOpen: false, name: '', price: '' });
-                this.loadData();
-                console.log(res);
+                if (res.ok) {
+                    this.setState({ createModalOpen: false, name: '', price: '' });
+                    this.loadData();
+                    console.log(res);
+                } else {
+                    alert("ALERT!!!\n\nPlease check fields and try again\n\n\n\nName field: Max characters is 250\n\nPrice field: Accepts numbers and decimals ")
+                }
             }).catch(err => err);
     }
 
@@ -52,9 +56,13 @@ export default class Product extends React.Component {
                 Price: this.state.price
             })
         }).then((res) => {
-            this.setState({ editModalOpen: false, name: '', price: ''});
-            this.loadData();
-            console.log(res);
+            if (res.ok) {
+                this.setState({ createModalOpen: false, name: '', price: '' });
+                this.loadData();
+                console.log(res);
+            } else {
+                alert("ALERT!!!\n\nPlease check fields and try again\n\n\n\nName field: Max characters is 50\n\nPrice field: Accepts numbers and decimals ")
+            }
         }).catch(err => err);
     }
 
