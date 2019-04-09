@@ -46,6 +46,7 @@ namespace Boilerplate.Web.App.Controllers
         }
 
         // PUT: Customer/EditCustomer
+        [HttpPut]
         public ActionResult EditStore(int id, [FromBody] Store store)
         {
             using (var db = new TALENTContext())

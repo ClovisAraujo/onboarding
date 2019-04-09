@@ -176,7 +176,7 @@ export default class Sales extends React.Component {
 
                     <td>
                         {/*Edit Modal*/}
-                        <Modal open={this.state.editModalOpen} size={'tiny'} trigger={<Button icon color='yellow' labelPosition='left' onClick={() => this.setState({ editModalOpen: true, dateSold: new Date(service.dateSold).toLocaleDateString(), customer: service.customer.id, product: service.product.id, store: service.store.id })}><Icon name='edit' />EDIT</Button>}>
+                        <Modal open={this.state.editModalOpen} size={'tiny'} trigger={<Button icon color='yellow' labelPosition='left' onClick={() => this.setState({ editModalOpen: true, id: service.id, dateSold: new Date(service.dateSold).toLocaleDateString(), customer: service.customer.id, product: service.product.id, store: service.store.id })}><Icon name='edit' />EDIT</Button>}>
                             <Modal.Header>Edit sale</Modal.Header>
                             <Modal.Content>
                                 <Form>
@@ -227,14 +227,14 @@ export default class Sales extends React.Component {
                             </Modal.Content>
                             <ModalActions>
                                 <Button secondary onClick={() => this.setState({ editModalOpen: false, dateSold: '', customer: '', store: '', product: '' })}>Cancel</Button>
-                                <Button onClick={() => { this.editSale(service.id) }} icon positive type='submit' labelPosition='right'><Icon name='check' />Edit</Button>
+                                <Button onClick={() => { this.editSale(this.state.id) }} icon positive type='submit' labelPosition='right'><Icon name='check' />Edit</Button>
                             </ModalActions>
                         </Modal>
                     </td>
 
                     <td>
                         {/*Delete Modal*/}
-                        <Modal open={this.state.deleteModalOpen} trigger={<Button icon color='red' labelPosition='left' onClick={() => this.setState({ deleteModalOpen: true })}> <Icon name='trash' />DELETE</Button>}>
+                        <Modal open={this.state.deleteModalOpen} trigger={<Button icon color='red' labelPosition='left' onClick={() => this.setState({ deleteModalOpen: true, id: service.id })}> <Icon name='trash' />DELETE</Button>}>
                             <Modal.Header>Delete sale</Modal.Header>
                             <Modal.Content>
                                 <Form>
@@ -245,7 +245,7 @@ export default class Sales extends React.Component {
                             </Modal.Content>
                             <ModalActions>
                                 <Button secondary onClick={() => this.setState({ deleteModalOpen: false })}>Cancel</Button>
-                                <Button icon onClick={(id) => this.deleteSale(service.id)} color='red' labelPosition='right' type='submit'><Icon name='cancel' />Delete</Button>
+                                <Button icon onClick={(id) => this.deleteSale(this.state.id)} color='red' labelPosition='right' type='submit'><Icon name='cancel' />Delete</Button>
                             </ModalActions>
                         </Modal>
                     </td>
