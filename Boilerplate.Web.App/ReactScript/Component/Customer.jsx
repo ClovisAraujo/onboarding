@@ -6,13 +6,17 @@ export default class Customer extends React.Component {
         super(props);
         this.state = {
             isLoading: true,
-            appData: [],
             name: '',
             address: '',
             id: 0,
             createModalOpen: false,
             deleteModalOpen: false,
-            editModalOpen: false
+            editModalOpen: false,
+            data: {
+                list: [],
+                totalPage: 0,
+                totalRecord: 0
+            }
         };
     }
 
@@ -69,12 +73,12 @@ export default class Customer extends React.Component {
 
 
     loadData = () => {
-        fetch("/Customer/CustomerList")
+        fetch("/Customer/CustomerList?sortColumnName=Id&sortOrder=asc&pageSize=10&currentPage=1")
             .then(res => res.json())
             .then((result) => {
                 console.log(result)
                 this.setState({
-                    appData: result,
+                    data: result,
                     isLoading: false
                 });
             })
@@ -100,7 +104,7 @@ export default class Customer extends React.Component {
 
     render() {
 
-        let serviceList = this.state.appData;
+        let serviceList = this.state.data.list;
 
         let tableData = null;
 

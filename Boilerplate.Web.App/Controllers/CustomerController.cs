@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Boilerplate.Web.App.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Dynamic.Core;
 
 namespace Boilerplate.Web.App.Controllers
 {
@@ -10,18 +12,37 @@ namespace Boilerplate.Web.App.Controllers
 
         // GET: Customer/CustomerList
         [HttpGet]
-        public JsonResult CustomerList()
+        public JsonResult CustomerList(string sortColumnName, string sortOrder, int pageSize, int currentPage)
         {
+
+            List<Customer> list = new List<Customer>();
+            int totalPage = 0;
+            int totalRecord = 0;
+
             using (var db = new TALENTContext())
             {
-                var customers = db.Customer.Select(x => new Customer()
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Address = x.Address
-                }).ToList();
+                var customers = db.Customer;
+                totalRecord = customers.Count();
 
-                return Json(customers);
+                if (pageSize > 0)
+                {
+                    totalPage = totalRecord / pageSize + ((totalRecord % pageSize) > 0 ? 1 : 0);
+                    list = customers.Select(x => new Customer()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Address = x.Address
+                    }).OrderBy(sortColumnName + " " + sortOrder).Skip(pageSize * (currentPage - 1)).Take(pageSize).ToList();
+                }
+                else
+                {
+                    list = customers.ToList();
+                }
+
+
+                var result = new { list = list, totalRecord = totalRecord, totalPage = totalPage };
+
+                return Json(result);
             }
         }
 
