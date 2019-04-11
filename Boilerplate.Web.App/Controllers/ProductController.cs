@@ -10,6 +10,23 @@ namespace Boilerplate.Web.App.Controllers
     public class ProductController : Controller
     {
 
+        // GET: Product/ProductListListSales ***This is for the sales Dropdown options
+        [HttpGet]
+        public JsonResult ProductListSales()
+        {
+            using (var db = new TALENTContext())
+            {
+                var products = db.Product.Select(x => new Product()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Price = x.Price
+                }).ToList();
+
+                return Json(products);
+            }
+        }
+
         // GET: Product/ProductList
         [HttpGet]
         public JsonResult ProductList(string sortColumnName, string sortOrder, int pageSize, int currentPage)

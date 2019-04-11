@@ -1,5 +1,6 @@
 ﻿import React from 'react';
-import { Button, Form, Modal, Icon, ModalActions, Pagination } from 'semantic-ui-react'
+import { Button, Form, Modal, Icon, ModalActions, Pagination } from 'semantic-ui-react';
+import DropdownItems from './DropdownItems';
 
 export default class Store extends React.Component {
     constructor(props) {
@@ -20,7 +21,8 @@ export default class Store extends React.Component {
             buttonSortingName: 'sort',
             buttonSortingAddress: 'sort',
             sortColumnName: 'id',
-            sortOrder: ''
+            sortOrder: '',
+            dropdownValue: '10'
         };
     }
 
@@ -31,7 +33,10 @@ export default class Store extends React.Component {
 
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if ((this.state.sortOrder !== prevState.sortOrder) || (this.state.buttonSortingName !== prevState.buttonSortingName) || (this.state.buttonSortingAddress !== prevState.buttonSortingAddress)) {
+        if ((this.state.sortOrder !== prevState.sortOrder) ||
+            (this.state.buttonSortingName !== prevState.buttonSortingName) ||
+            (this.state.buttonSortingAddress !== prevState.buttonSortingAddress) ||
+            (this.state.dropdownValue !== prevState.dropdownValue)) {
             this.loadData();
         }
     }
@@ -83,7 +88,9 @@ export default class Store extends React.Component {
 
     loadData = () => {
         console.log('testing before fetch : ' + this.state.sortColumnName + ' ' + this.state.sortOrder)
-        fetch("/Store/StoreList?sortColumnName=" + this.state.sortColumnName + "&sortOrder=" + this.state.sortOrder + "&pageSize=10&currentPage=1")
+        fetch("/Store/StoreList?sortColumnName=" + this.state.sortColumnName +
+            "&sortOrder=" + this.state.sortOrder +
+            "&pageSize=" + this.state.dropdownValue + "&currentPage=1")
             .then(res => res.json())
             .then((result) => {
                 console.log(result)
@@ -190,6 +197,10 @@ export default class Store extends React.Component {
                             <Button onClick={this.createStore} icon positive type='submit' labelPosition='right'><Icon name='check' />Create</Button>
                         </ModalActions>
                     </Modal>
+
+                    <DropdownItems handleClick={(event, { name, value }) => this.setState({ dropdownValue: value })} />
+
+
                     <table className="ui fixed celled striped table">
                         <thead>
                             <tr>
@@ -197,16 +208,16 @@ export default class Store extends React.Component {
                                     <Button circular icon={this.state.buttonSortingName}
                                         onClick={() => {
                                             (this.state.buttonSortingName === 'angle up' || this.state.buttonSortingName === 'sort') ?
-                                                (this.setState({ buttonSortingName: 'angle down', sortColumnName: 'Name', sortOrder: 'asc' })) :
-                                                (this.setState({ buttonSortingName: 'angle up', sortColumnName: 'Name', sortOrder: 'desc' }))
+                                                (this.setState({ buttonSortingAddress: 'sort', buttonSortingName: 'angle down', sortColumnName: 'Name', sortOrder: 'asc' })) :
+                                                (this.setState({ buttonSortingAddress: 'sort', buttonSortingName: 'angle up', sortColumnName: 'Name', sortOrder: 'desc' }))
                                         }}
                                     /></th>
                                 <th>Location&emsp;
                                     <Button circular icon={this.state.buttonSortingAddress}
                                         onClick={() => {
                                             (this.state.buttonSortingAddress === 'angle up' || this.state.buttonSortingAddress === 'sort') ?
-                                                (this.setState({ buttonSortingAddress: 'angle down', sortColumnName: 'Address', sortOrder: 'asc' })) :
-                                                (this.setState({ buttonSortingAddress: 'angle up', sortColumnName: 'Address', sortOrder: 'desc' }))
+                                                (this.setState({ buttonSortingName: 'sort', buttonSortingAddress: 'angle down', sortColumnName: 'Address', sortOrder: 'asc' })) :
+                                                (this.setState({ buttonSortingName: 'sort', buttonSortingAddress: 'angle up', sortColumnName: 'Address', sortOrder: 'desc' }))
                                         }}
                                     /></th>
                                 <th>Actions</th>

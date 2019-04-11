@@ -2,6 +2,7 @@
 import { Button, Form, Modal, Icon, ModalActions, Pagination, Dropdown } from 'semantic-ui-react'
 import { DateInput } from 'semantic-ui-calendar-react';
 import Moment from 'react-moment';
+import DropdownItems from './DropdownItems';;
 
 
 export default class Sales extends React.Component {
@@ -30,7 +31,8 @@ export default class Sales extends React.Component {
             buttonSortingStore: 'sort',
             buttonSortingDateSold: 'sort',
             sortColumnName: 'id',
-            sortOrder: ''
+            sortOrder: '',
+            dropdownValue: '10'
         };
     }
 
@@ -47,16 +49,19 @@ export default class Sales extends React.Component {
             (this.state.buttonSortingCustomer !== prevState.buttonSortingCustomer) ||
             (this.state.buttonSortingProduct !== prevState.buttonSortingProduct) ||
             (this.state.buttonSortingStore !== prevState.buttonSortingStore) ||
-            (this.state.buttonSortingDateSold !== prevState.buttonSortingDateSold)) {
+            (this.state.buttonSortingDateSold !== prevState.buttonSortingDateSold) ||
+            (this.state.dropdownValue !== prevState.dropdownValue)) {
             this.loadData();
         }
     }
 
     getCustomerList = () => {
-        fetch("/Customer/CustomerList")
+        fetch("/Customer/CustomerListSales")
             .then(res => res.json())
             .then((data) => {
-                let thisList = data.map(list => { return { key: list.id, text: list.name, value: list.id } })
+                let thisList = data
+                    .sort((a, b) => a.name > b.name)
+                    .map(list => { return { key: list.id, text: list.name, value: list.id } })
                 this.setState({
                     customerData: [{ value: '', display: '(Select Customer)' }].concat(thisList),
                     isLoading: false
@@ -71,10 +76,12 @@ export default class Sales extends React.Component {
     }
 
     getProductList = () => {
-        fetch("/Product/ProductList")
+        fetch("/Product/ProductListSales")
             .then(res => res.json())
             .then((data) => {
-                let thisList = data.map(list => { return { key: list.id, text: list.name, value: list.id } })
+                let thisList = data
+                    .sort((a, b) => a.name > b.name)
+                    .map(list => { return { key: list.id, text: list.name, value: list.id } })
                 this.setState({
                     productData: [{ value: '', display: '(Select Product)' }].concat(thisList),
                     isLoading: false
@@ -89,10 +96,12 @@ export default class Sales extends React.Component {
 
 
     getStoreList = () => {
-        fetch("/Store/StoreList")
+        fetch("/Store/StoreListSales")
             .then(res => res.json())
             .then((data) => {
-                let thisList = data.map(list => { return { key: list.id, text: list.name, value: list.id } })
+                let thisList = data
+                    .sort((a, b) => a.name > b.name)
+                    .map(list => { return { key: list.id, text: list.name, value: list.id } })
                 this.setState({
                     storeData: [{ value: '', display: '(Select Store)' }].concat(thisList),
                     isLoading: false
@@ -150,7 +159,9 @@ export default class Sales extends React.Component {
 
     loadData = () => {
         console.log('testing before fetch : ' + this.state.sortColumnName + ' ' + this.state.sortOrder)
-        fetch("/Sales/SalesList?sortColumnName=" + this.state.sortColumnName + "&sortOrder=" + this.state.sortOrder + "&pageSize=10&currentPage=1")
+        fetch("/Sales/SalesList?sortColumnName=" + this.state.sortColumnName +
+            "&sortOrder=" + this.state.sortOrder +
+            "&pageSize=" + this.state.dropdownValue + "&currentPage=1")
             .then(res => res.json())
             .then((result) => {
                 console.log(result)
@@ -297,6 +308,7 @@ export default class Sales extends React.Component {
                                     <label>Customer</label>
                                     <Dropdown
                                         placeholder='Select Customer'
+                                        scrolling
                                         fluid
                                         selection
                                         options={this.state.customerData}
@@ -308,6 +320,7 @@ export default class Sales extends React.Component {
                                     <label>Product</label>
                                     <Dropdown
                                         placeholder='Select Product'
+                                        scrolling
                                         fluid
                                         selection
                                         options={this.state.productData}
@@ -319,6 +332,7 @@ export default class Sales extends React.Component {
                                     <label>Store</label>
                                     <Dropdown
                                         placeholder='Select Store'
+                                        scrolling
                                         fluid
                                         selection
                                         options={this.state.storeData}
@@ -333,6 +347,9 @@ export default class Sales extends React.Component {
                             <Button onClick={this.createSale} icon positive type='submit' labelPosition='right'><Icon name='check' />Create</Button>
                         </ModalActions>
                     </Modal>
+
+                    <DropdownItems handleClick={(event, { name, value }) => this.setState({ dropdownValue: value })} />
+
                     <table className="ui fixed celled striped table">
                         <thead>
                             <tr>
@@ -340,32 +357,32 @@ export default class Sales extends React.Component {
                                     <Button circular icon={this.state.buttonSortingCustomer}
                                         onClick={() => {
                                             (this.state.buttonSortingCustomer === 'angle up' || this.state.buttonSortingCustomer === 'sort') ?
-                                                (this.setState({ buttonSortingCustomer: 'angle down', sortColumnName: 'Customer.Name', sortOrder: 'asc' })) :
-                                                (this.setState({ buttonSortingCustomer: 'angle up', sortColumnName: 'Customer.Name', sortOrder: 'desc' }))
+                                                (this.setState({ buttonSortingProduct: 'sort', buttonSortingStore: 'sort', buttonSortingDateSold: 'sort', buttonSortingCustomer: 'angle down', sortColumnName: 'Customer.Name', sortOrder: 'asc' })) :
+                                                (this.setState({ buttonSortingProduct: 'sort', buttonSortingStore: 'sort', buttonSortingDateSold: 'sort', buttonSortingCustomer: 'angle up', sortColumnName: 'Customer.Name', sortOrder: 'desc' }))
                                         }}
                                     /></th>
                                 <th>Product&emsp;
                                     <Button circular icon={this.state.buttonSortingProduct}
                                         onClick={() => {
                                             (this.state.buttonSortingProduct === 'angle up' || this.state.buttonSortingProduct === 'sort') ?
-                                                (this.setState({ buttonSortingProduct: 'angle down', sortColumnName: 'Product.Name', sortOrder: 'asc' })) :
-                                                (this.setState({ buttonSortingProduct: 'angle up', sortColumnName: 'Product.Name', sortOrder: 'desc' }))
+                                                (this.setState({ buttonSortingCustomer: 'sort', buttonSortingStore: 'sort', buttonSortingDateSold: 'sort', buttonSortingProduct: 'angle down', sortColumnName: 'Product.Name', sortOrder: 'asc' })) :
+                                                (this.setState({ buttonSortingCustomer: 'sort', buttonSortingStore: 'sort', buttonSortingDateSold: 'sort', buttonSortingProduct: 'angle up', sortColumnName: 'Product.Name', sortOrder: 'desc' }))
                                         }}
                                     /></th>
                                 <th>Store&emsp;
                                     <Button circular icon={this.state.buttonSortingStore}
                                             onClick={() => {
                                                 (this.state.buttonSortingStore === 'angle up' || this.state.buttonSortingStore === 'sort') ?
-                                                    (this.setState({ buttonSortingStore: 'angle down', sortColumnName: 'Store.Name', sortOrder: 'asc' })) :
-                                                    (this.setState({ buttonSortingStore: 'angle up', sortColumnName: 'Store.Name', sortOrder: 'desc' }))
+                                                    (this.setState({ buttonSortingCustomer: 'sort', buttonSortingDateSold: 'sort', buttonSortingProduct: 'sort', buttonSortingStore: 'angle down', sortColumnName: 'Store.Name', sortOrder: 'asc' })) :
+                                                    (this.setState({ buttonSortingCustomer: 'sort', buttonSortingDateSold: 'sort', buttonSortingProduct: 'sort', buttonSortingStore: 'angle up', sortColumnName: 'Store.Name', sortOrder: 'desc' }))
                                             }}
                                         /></th>
-                                <th>Date sold&emsp;
+                                <th>Date Sold&emsp;
                                     <Button circular icon={this.state.buttonSortingDateSold}
                                             onClick={() => {
                                                 (this.state.buttonSortingDateSold === 'angle up' || this.state.buttonSortingDateSold === 'sort') ?
-                                                    (this.setState({ buttonSortingDateSold: 'angle down', sortColumnName: 'Convert.ToDateTime(DateSold).ToString("dd/MM/yyyy")', sortOrder: 'asc' })) :
-                                                    (this.setState({ buttonSortingDateSold: 'angle up', sortColumnName: 'Convert.ToDateTime(DateSold).ToString("dd/MM/yyyy")', sortOrder: 'desc' }))
+                                                    (this.setState({ buttonSortingCustomer: 'sort', buttonSortingProduct: 'sort', buttonSortingStore: 'sort', buttonSortingDateSold: 'angle down', sortColumnName: 'Convert.ToDateTime(DateSold).ToString("yyyy/dd/MM")', sortOrder: 'asc' })) :
+                                                    (this.setState({ buttonSortingCustomer: 'sort', buttonSortingProduct: 'sort', buttonSortingStore: 'sort', buttonSortingDateSold: 'angle up', sortColumnName: 'Convert.ToDateTime(DateSold).ToString("yyyy/dd/MM")', sortOrder: 'desc' }))
                                             }}
                                         /></th>
                                 <th>Actions</th>

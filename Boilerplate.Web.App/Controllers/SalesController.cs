@@ -4,6 +4,7 @@ using Boilerplate.Web.App.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Dynamic.Core;
+using System;
 
 namespace Boilerplate.Web.App.Controllers
 {
@@ -53,17 +54,19 @@ namespace Boilerplate.Web.App.Controllers
         {
             using (var db = new TALENTContext())
             {
-                if (ModelState.IsValid)
+                try
                 {
                     db.Sales.Add(sales);
                     db.SaveChanges();
                     return StatusCode(StatusCodes.Status201Created);
-                }
 
-                else
+                }
+                catch (Exception e)
                 {
+                    Console.WriteLine(e);
                     return StatusCode(StatusCodes.Status400BadRequest);
                 }
+
 
             }
         }

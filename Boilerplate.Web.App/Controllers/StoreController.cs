@@ -9,8 +9,25 @@ namespace Boilerplate.Web.App.Controllers
 {
     public class StoreController : Controller
     {
-        // GET: Store/StoreList
 
+        // GET: Store/StoreListListSales ***This is for the sales Dropdown options
+        [HttpGet]
+        public JsonResult StoreListSales()
+        {
+            using (var db = new TALENTContext())
+            {
+                var stores = db.Store.Select(x => new Store()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Address = x.Address
+                }).ToList();
+
+                return Json(stores);
+            }
+        }
+
+        // GET: Store/StoreList
         [HttpGet]
         public JsonResult StoreList(string sortColumnName, string sortOrder, int pageSize, int currentPage)
         {
