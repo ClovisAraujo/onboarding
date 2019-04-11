@@ -130,9 +130,13 @@ export default class Sales extends React.Component {
             })
         })
             .then(res => {
-                this.setState({ createModalOpen: false, dateSold: '', customer: '', store: '', product: '' });
-                this.loadData();
-                console.log(res);
+                if (res.ok) {
+                    this.setState({ createModalOpen: false, dateSold: '', customer: '', store: '', product: '' });
+                    this.loadData();
+                    console.log(res);
+                } else {
+                    alert("ALERT!!!\n\nPlease check all fields and try again")
+                }
             }).catch(err => err);
     }
 

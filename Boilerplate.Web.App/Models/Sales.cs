@@ -19,7 +19,7 @@ namespace Boilerplate.Web.App.Models
         public int StoreId { get; set; }
 
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         [Required(ErrorMessage = "Date Sold is required")]
         public DateTime DateSold { get; set; }
 
