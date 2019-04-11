@@ -9,7 +9,6 @@ export default class Sales extends React.Component {
         super(props);
         this.state = {
             isLoading: true,
-            appData: [],
             customerData: [],
             customer: '',
             productData: [],
@@ -20,7 +19,18 @@ export default class Sales extends React.Component {
             id: 0,
             createModalOpen: false,
             deleteModalOpen: false,
-            editModalOpen: false
+            editModalOpen: false,
+            data: {
+                list: [],
+                totalPage: 0,
+                totalRecord: 0
+            },
+            buttonSortingCustomer: 'sort',
+            buttonSortingProduct: 'sort',
+            buttonSortingStore: 'sort',
+            buttonSortingDateSold: 'sort',
+            sortColumnName: 'id',
+            sortOrder: ''
         };
     }
 
@@ -30,6 +40,16 @@ export default class Sales extends React.Component {
         this.getProductList();
         this.getStoreList();
 
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if ((this.state.sortOrder !== prevState.sortOrder) ||
+            (this.state.buttonSortingCustomer !== prevState.buttonSortingCustomer) ||
+            (this.state.buttonSortingProduct !== prevState.buttonSortingProduct) ||
+            (this.state.buttonSortingStore !== prevState.buttonSortingStore) ||
+            (this.state.buttonSortingDateSold !== prevState.buttonSortingDateSold)) {
+            this.loadData();
+        }
     }
 
     getCustomerList = () => {
@@ -129,12 +149,14 @@ export default class Sales extends React.Component {
     }
 
     loadData = () => {
-        fetch("/Sales/SalesList")
+        console.log('testing before fetch : ' + this.state.sortColumnName + ' ' + this.state.sortOrder)
+        fetch("/Sales/SalesList?sortColumnName=" + this.state.sortColumnName + "&sortOrder=" + this.state.sortOrder + "&pageSize=10&currentPage=1")
             .then(res => res.json())
             .then((result) => {
                 console.log(result)
+                console.log('testing button ' + this.state.sortColumnName)
                 this.setState({
-                    appData: result,
+                    data: result,
                     isLoading: false
                 });
             })
@@ -159,7 +181,7 @@ export default class Sales extends React.Component {
 
     render() {
 
-        let serviceList = this.state.appData;
+        let serviceList = this.state.data.list;
 
         let tableData = null;
 
@@ -314,10 +336,38 @@ export default class Sales extends React.Component {
                     <table className="ui fixed celled striped table">
                         <thead>
                             <tr>
-                                <th>Customer</th>
-                                <th>Product</th>
-                                <th>Store</th>
-                                <th>Date sold</th>
+                                <th>Customer&emsp;
+                                    <Button circular icon={this.state.buttonSortingCustomer}
+                                        onClick={() => {
+                                            (this.state.buttonSortingCustomer === 'angle up' || this.state.buttonSortingCustomer === 'sort') ?
+                                                (this.setState({ buttonSortingCustomer: 'angle down', sortColumnName: 'Customer.Name', sortOrder: 'asc' })) :
+                                                (this.setState({ buttonSortingCustomer: 'angle up', sortColumnName: 'Customer.Name', sortOrder: 'desc' }))
+                                        }}
+                                    /></th>
+                                <th>Product&emsp;
+                                    <Button circular icon={this.state.buttonSortingProduct}
+                                        onClick={() => {
+                                            (this.state.buttonSortingProduct === 'angle up' || this.state.buttonSortingProduct === 'sort') ?
+                                                (this.setState({ buttonSortingProduct: 'angle down', sortColumnName: 'Product.Name', sortOrder: 'asc' })) :
+                                                (this.setState({ buttonSortingProduct: 'angle up', sortColumnName: 'Product.Name', sortOrder: 'desc' }))
+                                        }}
+                                    /></th>
+                                <th>Store&emsp;
+                                    <Button circular icon={this.state.buttonSortingStore}
+                                            onClick={() => {
+                                                (this.state.buttonSortingStore === 'angle up' || this.state.buttonSortingStore === 'sort') ?
+                                                    (this.setState({ buttonSortingStore: 'angle down', sortColumnName: 'Store.Name', sortOrder: 'asc' })) :
+                                                    (this.setState({ buttonSortingStore: 'angle up', sortColumnName: 'Store.Name', sortOrder: 'desc' }))
+                                            }}
+                                        /></th>
+                                <th>Date sold&emsp;
+                                    <Button circular icon={this.state.buttonSortingDateSold}
+                                            onClick={() => {
+                                                (this.state.buttonSortingDateSold === 'angle up' || this.state.buttonSortingDateSold === 'sort') ?
+                                                    (this.setState({ buttonSortingDateSold: 'angle down', sortColumnName: 'Convert.ToDateTime(DateSold).ToString("dd/MM/yyyy")', sortOrder: 'asc' })) :
+                                                    (this.setState({ buttonSortingDateSold: 'angle up', sortColumnName: 'Convert.ToDateTime(DateSold).ToString("dd/MM/yyyy")', sortOrder: 'desc' }))
+                                            }}
+                                        /></th>
                                 <th>Actions</th>
                                 <th>Actions</th>
                             </tr>

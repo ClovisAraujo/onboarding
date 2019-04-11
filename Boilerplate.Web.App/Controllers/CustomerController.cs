@@ -67,7 +67,7 @@ namespace Boilerplate.Web.App.Controllers
             }
         }
 
-        // PUT: Customer/EditCustomer
+        // PUT: Customer/EditCustomer/#
         [HttpPut]
         public ActionResult EditCustomer(int id, [FromBody] Customer customer)
         {

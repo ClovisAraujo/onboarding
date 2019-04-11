@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Boilerplate.Web.App.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Dynamic.Core;
 
 namespace Boilerplate.Web.App.Controllers
 {
@@ -9,20 +11,39 @@ namespace Boilerplate.Web.App.Controllers
     {
         // GET: Sales/SalesList
         [HttpGet]
-        public JsonResult SalesList()
+        public JsonResult SalesList(string sortColumnName, string sortOrder, int pageSize, int currentPage)
         {
+
+            List<Sales> list = new List<Sales>();
+            int totalPage = 0;
+            int totalRecord = 0;
+
             using (var db = new TALENTContext())
             {
-                var sales = db.Sales.Select(x => new Sales()
-                {
-                    Id = x.Id,
-                    Customer = x.Customer,
-                    Product = x.Product,
-                    Store = x.Store,
-                    DateSold = x.DateSold
-                }).ToList();
+                var sales = db.Sales;
+                totalRecord = sales.Count();
 
-                return Json(sales);
+                if (pageSize > 0)
+                {
+                    totalPage = totalRecord / pageSize + ((totalRecord % pageSize) > 0 ? 1 : 0);
+                    list = sales.Select(x => new Sales()
+                    {
+                        Id = x.Id,
+                        Customer = x.Customer,
+                        Product = x.Product,
+                        Store = x.Store,
+                        DateSold = x.DateSold
+                    }).OrderBy(sortColumnName + " " + sortOrder).Skip(pageSize * (currentPage - 1)).Take(pageSize).ToList();
+                }
+                else
+                {
+                    list = sales.ToList();
+                }
+
+
+                var result = new { list = list, totalRecord = totalRecord, totalPage = totalPage };
+
+                return Json(result);
             }
         }
 

@@ -6,19 +6,34 @@ export default class Store extends React.Component {
         super(props);
         this.state = {
             isLoading: true,
-            appData: [],
             name: '',
             address: '',
             id: 0,
             createModalOpen: false,
             deleteModalOpen: false,
-            editModalOpen: false
+            editModalOpen: false,
+            data: {
+                list: [],
+                totalPage: 0,
+                totalRecord: 0
+            },
+            buttonSortingName: 'sort',
+            buttonSortingAddress: 'sort',
+            sortColumnName: 'id',
+            sortOrder: ''
         };
     }
 
     componentDidMount() {
         this.loadData();
 
+    }
+
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if ((this.state.sortOrder !== prevState.sortOrder) || (this.state.buttonSortingName !== prevState.buttonSortingName) || (this.state.buttonSortingAddress !== prevState.buttonSortingAddress)) {
+            this.loadData();
+        }
     }
 
     createStore = () => {
@@ -67,12 +82,14 @@ export default class Store extends React.Component {
     }
 
     loadData = () => {
-        fetch("/Store/StoreList")
+        console.log('testing before fetch : ' + this.state.sortColumnName + ' ' + this.state.sortOrder)
+        fetch("/Store/StoreList?sortColumnName=" + this.state.sortColumnName + "&sortOrder=" + this.state.sortOrder + "&pageSize=10&currentPage=1")
             .then(res => res.json())
             .then((result) => {
                 console.log(result)
+                console.log('testing button ' + this.state.sortColumnName)
                 this.setState({
-                    appData: result,
+                    data: result,
                     isLoading: false
                 });
             })
@@ -98,7 +115,7 @@ export default class Store extends React.Component {
 
     render() {
 
-        let serviceList = this.state.appData;
+        let serviceList = this.state.data.list;
 
         let tableData = null;
 
@@ -176,8 +193,22 @@ export default class Store extends React.Component {
                     <table className="ui fixed celled striped table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Address</th>
+                                <th>Name&emsp;
+                                    <Button circular icon={this.state.buttonSortingName}
+                                        onClick={() => {
+                                            (this.state.buttonSortingName === 'angle up' || this.state.buttonSortingName === 'sort') ?
+                                                (this.setState({ buttonSortingName: 'angle down', sortColumnName: 'Name', sortOrder: 'asc' })) :
+                                                (this.setState({ buttonSortingName: 'angle up', sortColumnName: 'Name', sortOrder: 'desc' }))
+                                        }}
+                                    /></th>
+                                <th>Location&emsp;
+                                    <Button circular icon={this.state.buttonSortingAddress}
+                                        onClick={() => {
+                                            (this.state.buttonSortingAddress === 'angle up' || this.state.buttonSortingAddress === 'sort') ?
+                                                (this.setState({ buttonSortingAddress: 'angle down', sortColumnName: 'Address', sortOrder: 'asc' })) :
+                                                (this.setState({ buttonSortingAddress: 'angle up', sortColumnName: 'Address', sortOrder: 'desc' }))
+                                        }}
+                                    /></th>
                                 <th>Actions</th>
                                 <th>Actions</th>
                             </tr>

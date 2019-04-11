@@ -1,30 +1,53 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Boilerplate.Web.App.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Dynamic.Core;
 
 namespace Boilerplate.Web.App.Controllers
 {
     public class ProductController : Controller
     {
-        // GET: Customer/CustomerList
+
+        // GET: Product/ProductList
         [HttpGet]
-        public JsonResult ProductList()
+        public JsonResult ProductList(string sortColumnName, string sortOrder, int pageSize, int currentPage)
         {
+
+            List<Product> list = new List<Product>();
+            int totalPage = 0;
+            int totalRecord = 0;
+
             using (var db = new TALENTContext())
             {
-                var products = db.Product.Select(x => new Product()
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Price = x.Price
-                }).ToList();
+                var products = db.Product;
+                totalRecord = products.Count();
 
-                return Json(products);
+                if (pageSize > 0)
+                {
+                    totalPage = totalRecord / pageSize + ((totalRecord % pageSize) > 0 ? 1 : 0);
+                    list = products.Select(x => new Product()
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        Price = x.Price
+                    }).OrderBy(sortColumnName + " " + sortOrder).Skip(pageSize * (currentPage - 1)).Take(pageSize).ToList();
+                }
+                else
+                {
+                    list = products.ToList();
+                }
+
+
+                var result = new { list = list, totalRecord = totalRecord, totalPage = totalPage };
+
+                return Json(result);
             }
         }
 
-        // POST: Customer/CreateCustomer
+
+        // POST: Product/CreateProduct
         [HttpPost]
         public ActionResult CreateProduct([FromBody] Product product)
         {
@@ -45,7 +68,7 @@ namespace Boilerplate.Web.App.Controllers
             }
         }
 
-        // PUT: Customer/EditCustomer
+        // PUT: Product/EditProduct/#
         [HttpPut]
         public ActionResult EditProduct(int id, [FromBody] Product product)
         {
@@ -66,7 +89,7 @@ namespace Boilerplate.Web.App.Controllers
             }
         }
 
-        // DELETE: Customer/DeleteDeleteCustomer/#
+        // DELETE: Product/DeleteDeleteProduct/#
         [HttpDelete]
         public ActionResult DeleteProduct(int id)
         {

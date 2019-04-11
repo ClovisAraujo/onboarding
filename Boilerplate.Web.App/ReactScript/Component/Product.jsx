@@ -6,19 +6,33 @@ export default class Product extends React.Component {
         super(props);
         this.state = {
             isLoading: true,
-            appData: [],
             name: '',
             price: '',
             id: 0,
             createModalOpen: false,
             deleteModalOpen: false,
-            editModalOpen: false
+            editModalOpen: false,
+            data: {
+                list: [],
+                totalPage: 0,
+                totalRecord: 0
+            },
+            buttonSortingName: 'sort',
+            buttonSortingPrice: 'sort',
+            sortColumnName: 'id',
+            sortOrder: ''
         };
     }
 
     componentDidMount() {
         this.loadData();
 
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if ((this.state.sortOrder !== prevState.sortOrder) || (this.state.buttonSortingName !== prevState.buttonSortingName) || (this.state.buttonSortingPrice !== prevState.buttonSortingPrice)) {
+            this.loadData();
+        }
     }
 
     createProduct = () => {
@@ -68,12 +82,14 @@ export default class Product extends React.Component {
 
 
     loadData = () => {
-        fetch("/Product/ProductList")
+        console.log('testing before fetch : ' + this.state.sortColumnName + ' ' + this.state.sortOrder)
+        fetch("/Product/ProductList?sortColumnName=" + this.state.sortColumnName + "&sortOrder=" + this.state.sortOrder + "&pageSize=10&currentPage=1")
             .then(res => res.json())
             .then((result) => {
                 console.log(result)
+                console.log('testing button ' + this.state.sortColumnName)
                 this.setState({
-                    appData: result,
+                    data: result,
                     isLoading: false
                 });
             })
@@ -99,7 +115,7 @@ export default class Product extends React.Component {
 
     render() {
 
-        let serviceList = this.state.appData;
+        let serviceList = this.state.data.list;
 
         let tableData = null;
 
@@ -125,7 +141,7 @@ export default class Product extends React.Component {
                                 </Form>
                             </Modal.Content>
                             <ModalActions>
-                                <Button secondary onClick={() => this.setState({ editModalOpen: false, name: '', price: ''  })}>Cancel</Button>
+                                <Button secondary onClick={() => this.setState({ editModalOpen: false, name: '', price: '' })}>Cancel</Button>
                                 <Button onClick={() => { this.editProduct(this.state.id) }} icon positive type='submit' labelPosition='right'><Icon name='check' />Edit</Button>
                             </ModalActions>
                         </Modal>
@@ -177,8 +193,22 @@ export default class Product extends React.Component {
                     <table className="ui fixed celled striped table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Price</th>
+                                <th>Name&emsp;
+                                    <Button circular icon={this.state.buttonSortingName}
+                                        onClick={() => {
+                                            (this.state.buttonSortingName === 'angle up' || this.state.buttonSortingName === 'sort') ?
+                                                (this.setState({ buttonSortingName: 'angle down', sortColumnName: 'Name', sortOrder: 'asc' })) :
+                                                (this.setState({ buttonSortingName: 'angle up', sortColumnName: 'Name', sortOrder: 'desc' }))
+                                        }}
+                                    /></th>
+                                <th>Price&emsp;
+                                             <Button circular icon={this.state.buttonSortingPrice}
+                                        onClick={() => {
+                                            (this.state.buttonSortingPrice === 'angle up' || this.state.buttonSortingPrice === 'sort') ?
+                                                (this.setState({ buttonSortingPrice: 'angle down', sortColumnName: 'Price', sortOrder: 'asc' })) :
+                                                (this.setState({ buttonSortingPrice: 'angle up', sortColumnName: 'Price', sortOrder: 'desc' }))
+                                        }}
+                                    /></th>
                                 <th>Actions</th>
                                 <th>Actions</th>
                             </tr>

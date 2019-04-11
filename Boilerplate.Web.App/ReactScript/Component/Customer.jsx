@@ -16,13 +16,23 @@ export default class Customer extends React.Component {
                 list: [],
                 totalPage: 0,
                 totalRecord: 0
-            }
+            },
+            buttonSortingName: 'sort',
+            buttonSortingAddress: 'sort',
+            sortColumnName: 'id',
+            sortOrder: ''
         };
     }
 
     componentDidMount() {
         this.loadData();
 
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if ((this.state.sortOrder !== prevState.sortOrder) || (this.state.buttonSortingName !== prevState.buttonSortingName) || (this.state.buttonSortingAddress !== prevState.buttonSortingAddress)) {
+            this.loadData();
+        }
     }
 
     createCustomer = () => {
@@ -73,10 +83,12 @@ export default class Customer extends React.Component {
 
 
     loadData = () => {
-        fetch("/Customer/CustomerList?sortColumnName=Id&sortOrder=asc&pageSize=10&currentPage=1")
+        console.log('testing before fetch : ' + this.state.sortColumnName + ' ' + this.state.sortOrder)
+        fetch("/Customer/CustomerList?sortColumnName=" + this.state.sortColumnName + "&sortOrder=" + this.state.sortOrder + "&pageSize=10&currentPage=1")
             .then(res => res.json())
             .then((result) => {
                 console.log(result)
+                console.log('testing button ' + this.state.sortColumnName)
                 this.setState({
                     data: result,
                     isLoading: false
@@ -182,8 +194,22 @@ export default class Customer extends React.Component {
                     <table className="ui fixed celled striped table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Location</th>
+                                <th>Name&emsp;
+                                    <Button circular icon={this.state.buttonSortingName}
+                                        onClick={() => {
+                                            (this.state.buttonSortingName === 'angle up' || this.state.buttonSortingName === 'sort') ?
+                                                (this.setState({ buttonSortingName: 'angle down', sortColumnName: 'Name', sortOrder: 'asc' })) :
+                                                (this.setState({ buttonSortingName: 'angle up', sortColumnName: 'Name', sortOrder: 'desc' }))
+                                        }}
+                                    /></th>
+                                <th>Location&emsp;
+                                    <Button circular icon={this.state.buttonSortingAddress}
+                                        onClick={() => {
+                                            (this.state.buttonSortingAddress === 'angle up' || this.state.buttonSortingAddress === 'sort') ?
+                                                (this.setState({ buttonSortingAddress: 'angle down', sortColumnName: 'Address', sortOrder: 'asc' })) :
+                                                (this.setState({ buttonSortingAddress: 'angle up', sortColumnName: 'Address', sortOrder: 'desc' }))
+                                        }}
+                                    /></th>
                                 <th>Actions</th>
                                 <th>Actions</th>
                             </tr>
