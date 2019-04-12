@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { Button, Form, Modal, Icon, ModalActions, Pagination } from 'semantic-ui-react';
+import { Button, Form, Modal, Icon, ModalActions, Pagination, Label } from 'semantic-ui-react';
 import DropdownItems from './DropdownItems';;
 
 export default class Product extends React.Component {
@@ -22,7 +22,8 @@ export default class Product extends React.Component {
             buttonSortingPrice: 'sort',
             sortColumnName: 'id',
             sortOrder: '',
-            dropdownValue: '10'
+            dropdownValue: 10,
+            activePage: 1
         };
     }
 
@@ -35,7 +36,8 @@ export default class Product extends React.Component {
         if ((this.state.sortOrder !== prevState.sortOrder) ||
             (this.state.buttonSortingName !== prevState.buttonSortingName) ||
             (this.state.buttonSortingPrice !== prevState.buttonSortingPrice) ||
-            (this.state.dropdownValue !== prevState.dropdownValue)) {
+            (this.state.dropdownValue !== prevState.dropdownValue) ||
+            (this.state.activePage !== prevState.activePage)) {
             this.loadData();
         }
     }
@@ -90,7 +92,8 @@ export default class Product extends React.Component {
         console.log('testing before fetch : ' + this.state.sortColumnName + ' ' + this.state.sortOrder)
         fetch("/Product/ProductList?sortColumnName=" + this.state.sortColumnName +
             "&sortOrder=" + this.state.sortOrder +
-            "&pageSize=" + this.state.dropdownValue + "&currentPage=1")
+            "&pageSize=" + this.state.dropdownValue +
+            "&currentPage=" + this.state.activePage)
             .then(res => res.json())
             .then((result) => {
                 console.log(result)
@@ -117,6 +120,12 @@ export default class Product extends React.Component {
                 this.loadData();
                 console.log(res);
             }).catch(err => err);
+    }
+
+    handlePaginationChange = (e, { activePage }) => {
+        console.log(this.state.activePage)
+        console.log(activePage)
+        this.setState({ activePage })
     }
 
 
@@ -228,6 +237,19 @@ export default class Product extends React.Component {
                             {tableData}
                         </tbody>
                     </table>
+
+                    <div className="pagStyle">
+                        <Pagination
+                            totalPages={this.state.data.totalPage}
+                            activePage={this.state.activePage}
+                            onPageChange={this.handlePaginationChange}
+
+                        />&emsp;
+                        <Label as='a' size='big' color='teal'>Total Items:
+                            <Label.Detail>{this.state.data.totalRecord}</Label.Detail>
+                        </Label>
+                    </div>
+
                 </div>
             </React.Fragment >
 

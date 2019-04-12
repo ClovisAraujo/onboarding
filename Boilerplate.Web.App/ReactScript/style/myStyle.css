@@ -213,3 +213,8 @@ h1, h2, h3, h4, h5, h6 {
 .dropFloatRight {
     float: right;
 }
+
+.pagStyle {
+    display: flex;
+    justify-content: flex-end;
+}
