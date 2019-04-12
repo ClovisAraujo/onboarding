@@ -2,7 +2,8 @@
 import { Button, Form, Modal, Icon, ModalActions, Pagination, Dropdown } from 'semantic-ui-react'
 import { DateInput } from 'semantic-ui-calendar-react';
 import Moment from 'react-moment';
-import DropdownItems from './DropdownItems';;
+import DropdownItems from './DropdownItems';
+import moment from 'moment/moment.js'
 
 
 export default class Sales extends React.Component {
@@ -116,6 +117,7 @@ export default class Sales extends React.Component {
 
     createSale = () => {
         console.log("date " + this.state.dateSold + " cust " + this.state.customer + " store " + this.state.store + " product " + this.state.product)
+        console.log("testing moment - " + moment(this.state.dateSold, "DD-MM-YYYY").format("MM-DD-YYYY"))
         fetch("/Sales/CreateSales", {
             method: 'POST',
             headers: {
@@ -123,7 +125,7 @@ export default class Sales extends React.Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                DateSold: this.state.dateSold,
+                DateSold: moment(this.state.dateSold, "DD-MM-YYYY").format("MM-DD-YYYY"),
                 CustomerId: this.state.customer,
                 ProductId: this.state.product,
                 StoreId: this.state.store
@@ -149,7 +151,7 @@ export default class Sales extends React.Component {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                DateSold: this.state.dateSold,
+                DateSold: moment(this.state.dateSold, "DD-MM-YYYY").format("MM-DD-YYYY"),
                 CustomerId: this.state.customer,
                 ProductId: this.state.product,
                 StoreId: this.state.store
@@ -208,12 +210,12 @@ export default class Sales extends React.Component {
                     <td>{service.customer.name}</td>
                     <td>{service.product.name}</td>
                     <td>{service.store.name}</td>
-                    <td><Moment format="MM/DD/YYYY">{service.dateSold}</Moment></td>
+                    <td><Moment format="DD/MM/YYYY">{service.dateSold}</Moment></td>
 
 
                     <td>
                         {/*Edit Modal*/}
-                        <Modal open={this.state.editModalOpen} size={'tiny'} trigger={<Button icon color='yellow' labelPosition='left' onClick={() => this.setState({ editModalOpen: true, id: service.id, dateSold: new Date(service.dateSold).toLocaleDateString(), customer: service.customer.id, product: service.product.id, store: service.store.id })}><Icon name='edit' />EDIT</Button>}>
+                        <Modal open={this.state.editModalOpen} size={'tiny'} trigger={<Button icon color='yellow' labelPosition='left' onClick={() => this.setState({ editModalOpen: true, id: service.id, dateSold: moment(service.dateSold, "YYYY-DD-MM").format("MM-DD-YYYY"), customer: service.customer.id, product: service.product.id, store: service.store.id })}><Icon name='edit' />EDIT</Button>}>
                             <Modal.Header>Edit sale</Modal.Header>
                             <Modal.Content>
                                 <Form>

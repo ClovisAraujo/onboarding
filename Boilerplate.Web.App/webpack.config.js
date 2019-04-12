@@ -30,6 +30,11 @@ module.exports = {
                 use: { loader: "babel-loader" }
             },
             {
+                test: /\.jsx?$/,
+                include: /node_modules/,
+                use: ['react-hot-loader/webpack'],
+            },
+            {
                 test: /\.html$/,
                 use: { loader: "html-loader" }
             },
