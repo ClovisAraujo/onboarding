@@ -187,7 +187,7 @@ export default class Product extends React.Component {
             <React.Fragment>
                 <div>
                     {/*New product Modal*/}
-                    <Modal open={this.state.createModalOpen} size={'tiny'} trigger={<Button primary onClick={() => this.setState({ createModalOpen: true })}>New Product</Button>}>
+                    <Modal open={this.state.createModalOpen} size={'tiny'} trigger={<Button size='big' primary onClick={() => this.setState({ createModalOpen: true })}>New Product</Button>}>
                         <Modal.Header>Create product</Modal.Header>
                         <Modal.Content>
                             <Form>

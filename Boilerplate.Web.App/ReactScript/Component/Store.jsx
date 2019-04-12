@@ -187,7 +187,7 @@ export default class Store extends React.Component {
             <React.Fragment>
                 <div>
                     {/*New store Modal*/}
-                    <Modal open={this.state.createModalOpen} size={'tiny'} trigger={<Button primary onClick={() => this.setState({ createModalOpen: true })}>New Store</Button>}>
+                    <Modal open={this.state.createModalOpen} size={'tiny'} trigger={<Button size='big' primary onClick={() => this.setState({ createModalOpen: true })}>New Store</Button>}>
                         <Modal.Header>Create store</Modal.Header>
                         <Modal.Content>
                             <Form>

@@ -304,7 +304,7 @@ export default class Sales extends React.Component {
             <React.Fragment>
                 <div>
                     {/*New sale Modal*/}
-                    <Modal open={this.state.createModalOpen} size={'tiny'} trigger={<Button primary onClick={() => this.setState({ createModalOpen: true })}>New Sale</Button>}>
+                    <Modal open={this.state.createModalOpen} size={'tiny'} trigger={<Button size='big' primary onClick={() => this.setState({ createModalOpen: true })}>New Sale</Button>}>
                         <Modal.Header>Create sale</Modal.Header>
                         <Modal.Content>
                             <Form>

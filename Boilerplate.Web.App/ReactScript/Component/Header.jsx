@@ -13,8 +13,8 @@ export default class Header extends Component {
 
         return (
             <Segment inverted>
-                <Menu inverted pointing secondary>
-                    <Menu.Item as={NavLink} exact to='/'
+                <Menu inverted secondary>
+                    <Menu.Item header as={NavLink} exact to='/'
                         name='home'
                     />
                     <Menu.Item as={NavLink} to='/customer'
