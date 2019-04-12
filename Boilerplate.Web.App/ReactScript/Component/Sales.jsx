@@ -224,7 +224,7 @@ export default class Sales extends React.Component {
 
                     <td>
                         {/*Edit Modal*/}
-                        <Modal open={this.state.editModalOpen} size={'tiny'} trigger={<Button icon color='yellow' labelPosition='left' onClick={() => this.setState({ editModalOpen: true, id: service.id, dateSold: moment(service.dateSold, "YYYY-DD-MM").format("MM-DD-YYYY"), customer: service.customer.id, product: service.product.id, store: service.store.id })}><Icon name='edit' />EDIT</Button>}>
+                        <Modal open={this.state.editModalOpen} size={'tiny'} trigger={<Button icon color='yellow' labelPosition='left' onClick={() => this.setState({ editModalOpen: true, id: service.id, dateSold: moment(service.dateSold, "YYYY-MM-DD").format("DD/MM/YYYY"), customer: service.customer.id, product: service.product.id, store: service.store.id })}><Icon name='edit' />EDIT</Button>}>
                             <Modal.Header>Edit sale</Modal.Header>
                             <Modal.Content>
                                 <Form>
