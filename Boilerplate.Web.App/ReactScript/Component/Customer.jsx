@@ -32,6 +32,7 @@ export default class Customer extends React.Component {
         this.loadData();
     }
 
+    //This ensures state is updated before table data is refreshed
     componentDidUpdate(prevProps, prevState, snapshot) {
         if ((this.state.sortOrder !== prevState.sortOrder) ||
             (this.state.buttonSortingName !== prevState.buttonSortingName) ||
@@ -129,6 +130,13 @@ export default class Customer extends React.Component {
         this.setState({ activePage })
     }
 
+    handleDropdownChange = (event, { name, value }) => {
+        this.setState({ dropdownValue: value })
+        if (this.state.activePage > 1) {
+            this.setState({ activePage: 1 })
+        }
+    }
+
 
     render() {
 
@@ -208,7 +216,8 @@ export default class Customer extends React.Component {
                         </ModalActions>
                     </Modal>
 
-                    <DropdownItems handleClick={(event, { name, value }) => this.setState({ dropdownValue: value })} />
+                    {/*Call dropdown function which checks if page number is higher than 1 and is it is then change it back to 1 because the numbers of item on the page have changed*/}
+                    <DropdownItems handleClick={this.handleDropdownChange} />
 
                     <table className="ui fixed celled striped table">
                         <thead>
@@ -238,6 +247,7 @@ export default class Customer extends React.Component {
                         </tbody>
                     </table>
 
+                    {/*Pagination*/}
                     <div className="pagStyle">
                         <Pagination
                             totalPages={this.state.data.totalPage}
