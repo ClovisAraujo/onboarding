@@ -13,24 +13,16 @@ const Home = () => (
         </div>
         <div className="homeButtons">
             <NavLink to="/customer">
-                <Button inverted size='large' color='yellow'>
-                    Customer
-                </Button>
+                <button class="ui yellow inverted large button buttonSize">Customer</button>
             </NavLink>&emsp;
              <NavLink to="/product">
-                <Button inverted size='large' color='green'>
-                    Product
-            </Button>
+                <button class="ui green inverted large button buttonSize">Product</button>
             </NavLink>&emsp;
              <NavLink to="/store">
-                <Button inverted size='large' color='violet'>
-                    Store
-         </Button>
+                <button class="ui violet inverted large button buttonSize">Store</button>
             </NavLink>&emsp;
              <NavLink to="/sales">
-                <Button inverted size='large' color='red'>
-                    Sales
-         </Button>
+                <button class="ui red inverted large button buttonSize">Sales</button>
             </NavLink>
         </div>
     </div>
